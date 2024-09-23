@@ -1,6 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:telephony/telephony.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -70,58 +73,148 @@ class _HomeScreenState extends State<HomeScreen> {
   await GetAddressFromLatLong(position); // Pass the position object here
 }
 
-void callPolice ()async{
+void callPolice (){
   print(" called Police!!");
 }
 
-void callAmbulance ()async{
+void callAmbulance (){
   print(" called Ambulance!!");
 }
 
-void callHospital ()async{
+void callHospital (){
   print(" called Hospital!!");
 }
+
+Future<void> _launchUrl(String phoneNumber) async {
+  final Uri uri = Uri(scheme: "tel", path: phoneNumber);
+
+  try {
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
+      );
+    } else {
+      print("Cannot launch Uri");
+    }
+  } catch (e) {
+    print(e.toString());
+  }
+}
+
+Future<void> _sendSMS()async{
+  final Telephony telephony = Telephony.instance;
+  bool? permissionsGranted = await telephony.requestPhoneAndSmsPermissions;
+
+  if(permissionsGranted==true){
+  telephony.sendSmsByDefaultApp(to: "9708372026", message: "Help");
+}
+  else{
+    await telephony.requestPhoneAndSmsPermissions;
+  }}
+
 
 
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: "SOS".text.color(Vx.white).make().centered(),backgroundColor: Vx.gray600,),
-      body: Column(mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          //CircularProgressIndicator(color: Vx.red500,),
-          ElevatedButton(onPressed: (){
-            getLocation();
-            "Sending messages!!!".text.make();
-          }, child: "SOS".text.make()),
-          Center(
-            child: Container(
-              child: Column(mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(onPressed: (){callPolice();}, child: "Call Police".text.make()),
-                   ElevatedButton(onPressed: (){callAmbulance();}, child: "Call Ambulance".text.make()),
-                    ElevatedButton(onPressed: (){callHospital();}, child: "Call Hospital".text.make()),
-                  Text(
-                    latitude != null
-                        ? "Latitude: $latitude"
-                        : "Latitude: Not available",
-                  ),
-                  Text(
-                    longitude != null
-                        ? "Longitude: $longitude"
-                        : "Longitude: Not available",
-                  ),
-                  Text(
-                    address != null
-                        ? "Address: $address"
-                        : "Address: Not available",
-                  ),
-                ],
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(title: "SOS".text.color(Vx.white).make().centered(),backgroundColor: Vx.gray600,),
+        body: Column(mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            //CircularProgressIndicator(color: Vx.red500,),
+            ElevatedButton(
+              onPressed: () async {
+                // Check if location services are enabled
+                bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+                
+                if (serviceEnabled) {
+                  // If location services are enabled, call getLocation
+                  getLocation();
+                  _sendSMS();
+                } else {
+                  // If location services are disabled, show an alert dialog
+                  showDialog(
+                    barrierDismissible: false,
+                  context: context,
+                  builder: (context) => AlertDialog(
+                        //backgroundColor: Vx.,
+                        scrollable: true,
+                        icon: Icon(Icons.location_off_outlined,size: 45,),
+                        iconColor: Vx.red700,
+                        content: Center(
+                          child: Text(
+                              "Turn on location services!!"),
+                        ),
+                        contentTextStyle: TextStyle(
+                          color: Vx.black,
+                          fontSize: 15,
+                          letterSpacing: 1,
+                          fontFamily: "Poppins",
+                        ),
+                        actions: [
+                          TextButton(
+                            style: ButtonStyle(
+                              backgroundColor: WidgetStatePropertyAll(Vx.purple500)
+                            ),
+                            onPressed: () async {
+                              //AuthService authService = AuthService();
+                              // try {
+                              //   await authService.deleteAccount();
+                                 Navigator.pop(context); // Close the dialog
+                              // } catch (e) {
+                              //   print("Error deleting account: $e");
+                              //   // Handle error if needed
+                              // }
+                            },
+                            child: Text(
+                              "Ok",
+                              style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  color: Vx.white,
+                                  fontSize: 18),
+                            ),
+                          ),
+                        ],
+                        actionsAlignment: MainAxisAlignment.center,
+                        //titlePadding: EdgeInsets.symmetric(horizontal: 20),
+                        //contentPadding: EdgeInsets.symmetric(horizontal: -20),
+                      ));
+                }
+              },
+              child: "SOS".text.make(),
+            ),
+            Center(
+              child: Container(
+                child: Column(mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(onPressed: ()  { 
+                      _launchUrl("100");
+                    }, child:  "Call Police".text.make()),
+                     ElevatedButton(onPressed: (){ _launchUrl("112");}, child: "Call Ambulance".text.make()),
+                      ElevatedButton(onPressed: (){ _launchUrl("101");}, child: "Call Fire Services".text.make()),
+                    Text(
+                      latitude != null
+                          ? "Latitude: $latitude"
+                          : "Latitude: Not available",
+                    ),
+                    Text(
+                      longitude != null
+                          ? "Longitude: $longitude"
+                          : "Longitude: Not available",
+                    ),
+                    Text(
+                      address != null
+                          ? "Address: $address"
+                          : "Address: Not available",
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
