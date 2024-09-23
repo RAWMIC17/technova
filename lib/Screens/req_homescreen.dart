@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sms/flutter_sms.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:telephony/telephony.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -17,6 +17,8 @@ class _HomeScreenState extends State<HomeScreen> {
   double? latitude;
   double? longitude;
   String? address;
+  String message = "This is a test message!";
+  List<String> recipents = ["9708372026", "8271008337"];
 
     // Function to get the address from latitude and longitude
   Future<void> GetAddressFromLatLong(Position position) async {
@@ -102,16 +104,13 @@ Future<void> _launchUrl(String phoneNumber) async {
   }
 }
 
-Future<void> _sendSMS()async{
-  final Telephony telephony = Telephony.instance;
-  bool? permissionsGranted = await telephony.requestPhoneAndSmsPermissions;
-
-  if(permissionsGranted==true){
-  telephony.sendSmsByDefaultApp(to: "9708372026", message: "Help");
+void _sendSMS(String message, List<String> recipents) async {
+ String _result = await sendSMS(message: message, recipients: recipents)
+        .catchError((onError) {
+      print(onError);
+    });
+print(_result);
 }
-  else{
-    await telephony.requestPhoneAndSmsPermissions;
-  }}
 
 
 
@@ -132,7 +131,7 @@ Future<void> _sendSMS()async{
                 if (serviceEnabled) {
                   // If location services are enabled, call getLocation
                   getLocation();
-                  _sendSMS();
+                  sendSMS(message: message, recipients: recipents);
                 } else {
                   // If location services are disabled, show an alert dialog
                   showDialog(

@@ -10,9 +10,9 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter:
     sdk: flutter
+  flutter_sms: ^2.3.3
   geocoding: ^3.0.0
   geolocator: ^13.0.1
-  telephony: ^0.2.0
   url_launcher: ^6.3.0
   velocity_x: ^4.2.1
 
