@@ -7,7 +7,7 @@ class ResponderHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold(backgroundColor: Vx.black,
       appBar: AppBar(title: "Responder".text.make(),),
       body: Column(mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [

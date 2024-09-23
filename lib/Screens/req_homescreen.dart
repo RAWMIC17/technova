@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sms/flutter_sms.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -18,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   double? longitude;
   String? address;
   String message = "This is a test message!";
-  List<String> recipents = ["9708372026", "8271008337"];
+  String recipents = "9708372026";
 
     // Function to get the address from latitude and longitude
   Future<void> GetAddressFromLatLong(Position position) async {
@@ -75,17 +74,6 @@ class _HomeScreenState extends State<HomeScreen> {
   await GetAddressFromLatLong(position); // Pass the position object here
 }
 
-void callPolice (){
-  print(" called Police!!");
-}
-
-void callAmbulance (){
-  print(" called Ambulance!!");
-}
-
-void callHospital (){
-  print(" called Hospital!!");
-}
 
 Future<void> _launchUrl(String phoneNumber) async {
   final Uri uri = Uri(scheme: "tel", path: phoneNumber);
@@ -104,13 +92,14 @@ Future<void> _launchUrl(String phoneNumber) async {
   }
 }
 
-void _sendSMS(String message, List<String> recipents) async {
- String _result = await sendSMS(message: message, recipients: recipents)
-        .catchError((onError) {
-      print(onError);
-    });
-print(_result);
-}
+// Future<void> sendSMS(String message,String recipients) async {
+//  String result = (await BackgroundSms.sendMessage(phoneNumber: recipients, message: message)) as String;
+//     if (result == SmsStatus.sent) {
+//       print("Sent");
+//     } else {
+//       print("Failed");
+//     }
+// }
 
 
 
@@ -131,7 +120,7 @@ print(_result);
                 if (serviceEnabled) {
                   // If location services are enabled, call getLocation
                   getLocation();
-                  sendSMS(message: message, recipients: recipents);
+                  //sendSMS(message, "8271008337");
                 } else {
                   // If location services are disabled, show an alert dialog
                   showDialog(
