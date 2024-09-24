@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:technova/Screens/req_homescreen.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ChoicePage extends StatelessWidget {
@@ -14,7 +15,7 @@ class ChoicePage extends StatelessWidget {
             child: Container(width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.width,
               color: Vx.red500,
-              child: TextButton(onPressed: (){}, child: "Request".text.xl5.color(Vx.white).make()),
+              child: TextButton(onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));}, child: "Request".text.xl5.color(Vx.white).make()),
             ),
           ),
           Expanded(
