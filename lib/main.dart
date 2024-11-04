@@ -13,12 +13,12 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-       home: ChoicePage(),
-      // ChatPage(
-      //   recieverUserName: 'ChatBot', // Provide a username
-      //   recieverID: 'user123',        // Provide a receiver ID
-      //   recieverEmail: 'john@example.com', // Provide an email
-      // ),
+       home: 
+      ChatPage(
+        recieverUserName: 'ChatBot', // Provide a username
+        recieverID: 'user123',        // Provide a receiver ID
+        recieverEmail: 'john@example.com', // Provide an email
+      ),
     );
   }
 }
