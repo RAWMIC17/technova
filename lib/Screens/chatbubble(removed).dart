@@ -202,7 +202,7 @@ class ChatBubble extends StatelessWidget {
               right: isCurrentUser ? 8 : 60),
           padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
           decoration: BoxDecoration(
-            color: isCurrentUser ? Colors.blue[100] : Colors.grey[300],
+            color: isCurrentUser ? Colors.blue[200] : Colors.grey[300],
             borderRadius: BorderRadius.circular(18.0),
           ),
           child: Column(

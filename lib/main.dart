@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:technova/Screens/chatpage(removed).dart';
-import 'package:technova/Screens/choice_page.dart';
+import 'package:technova/Screens/navBarPage.dart';
+import 'package:technova/utils/theme.dart';
 
 void main() {
   runApp(MainApp());
@@ -12,13 +12,9 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: MyTheme.darktheme(context),
       debugShowCheckedModeBanner: false,
-       home: 
-      ChatPage(
-        recieverUserName: 'ChatBot', // Provide a username
-        recieverID: 'user123',        // Provide a receiver ID
-        recieverEmail: 'john@example.com', // Provide an email
-      ),
+       home:BottomNavigationBarPage()
     );
   }
 }
